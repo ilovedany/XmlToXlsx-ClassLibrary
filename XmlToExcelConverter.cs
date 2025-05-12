@@ -7,19 +7,19 @@ namespace XmlToXlsx
 {
     public class XmlToExcelConverter
     {
-        public void ConvertXmlToXlsxPath(string pathToXml, int delOrNo, int openOrNo)
+        public void ConvertXmlToXlsxPath(string pathToXml,string pathToSave, int delOrNo, int openOrNo)
         {
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             XmlDocument xDoc = new XmlDocument();
 
-            xDoc.Load(pathToXml); //первый параметр - путь к xml файлу
+            xDoc.Load(pathToXml); 
 
             XmlElement? xRoot = xDoc.DocumentElement;
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             WorksheetColumns worksheetColumns = new WorksheetColumns();
-            FileInfo xmlFile = new FileInfo($"{pathToXml}");
+            FileInfo xmlFile = new FileInfo(pathToXml);
 
             string[] columns = xRoot.GetAttribute("headers").Split(" ");
             int countTags = columns.Length;
@@ -131,10 +131,12 @@ namespace XmlToXlsx
 
             }
             worksheet.AllocatedRange.AutoFitColumns();
-            workbook.SaveToFile($"{Path.ChangeExtension(pathToXml, ".xlsx")}", ExcelVersion.Version2016);
+
+            workbook.SaveToFile(pathToSave, ExcelVersion.Version2016);
+
             if (openOrNo == 1)
             {
-                Process.Start(new ProcessStartInfo($"{Path.ChangeExtension(pathToXml, ".xlsx")}") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(pathToSave) { UseShellExecute = true });
             }
         
             
